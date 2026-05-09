@@ -625,4 +625,8 @@ Converts pipeline JSON into GRPO training format.
 
 ## License
 
-MIT -- Use freely for research and commercial AD/ADAS model training.
+This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)**.
+
+You are free to use, share, and adapt this library for **non-commercial purposes only** (research, education, personal projects). Commercial use is **not permitted** without explicit written permission from the copyright holder.
+
+See [LICENSE](LICENSE) for the full license text, or visit: https://creativecommons.org/licenses/by-nc/4.0/
