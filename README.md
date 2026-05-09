@@ -1,4 +1,4 @@
-﻿# ðŸ§  AD Thinker Reward Function Library
+# 🧠 4QDR.AI AD Thinker Reward Function Library
 
 **A modular, production-grade library of 20 verifiable reward functions for reinforcement learning post-training of AD/ADAS domain expert models.**
 

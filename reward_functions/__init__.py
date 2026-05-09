@@ -1,5 +1,5 @@
 """
-AD Thinker Reward Function Library
+4QDR.AI AD Thinker Reward Function Library
 ===================================
 A modular, composable library of 20 reward functions for GRPO/GSPO/GDPO/DPO
 reinforcement learning post-training of AD/ADAS domain expert models.
