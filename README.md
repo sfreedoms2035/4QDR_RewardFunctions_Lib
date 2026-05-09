@@ -2,7 +2,7 @@
 
 **A modular, production-grade library of 20 verifiable reward functions for reinforcement learning post-training of AD/ADAS domain expert models.**
 
-Compatible with: **Unsloth** Â· **trl** Â· **GRPO** Â· **GSPO** Â· **GDPO** Â· **DPO** Â· **ORPO** Â· **SimPO** Â· **KTO**
+Compatible with: **Unsloth** · **trl** · **GRPO** · **GSPO** · **GDPO** · **DPO** · **ORPO** · **SimPO** · **KTO**
 
 ---
 
@@ -22,15 +22,15 @@ Compatible with: **Unsloth** Â· **trl** Â· **GRPO** Â· **GSPO** Â· **GDP
 
 ---
 
-## ðŸš€ Quick Start
+## 🚀 Quick Start
 
 ```python
 from reward_functions import create_reward_suite, RewardDispatcher
 
-# Option 1: Quick â€” get all reward functions for GRPOTrainer
+# Option 1: Quick - get all reward functions for GRPOTrainer
 reward_funcs = create_reward_suite(mode="lightweight")
 
-# Option 2: Task-aware â€” auto-select rewards for a specific task
+# Option 2: Task-aware - auto-select rewards for a specific task
 dispatcher = RewardDispatcher(mode="lightweight")
 reward_funcs = dispatcher.get_reward_funcs(task_type="10_element_concept")
 
@@ -45,7 +45,7 @@ for name, score in scores.items():
 
 ---
 
-## ðŸ“¦ Installation
+## 📦 Installation
 
 ### Local Development
 
@@ -54,7 +54,7 @@ for name, score in scores.items():
 git clone https://github.com/sfreedoms2035/4QDR_RewardFunctions_Lib.git RewardFunctionsADThinker
 cd RewardFunctionsADThinker
 
-# Install dependencies (minimal â€” only numpy required for GDPO)
+# Install dependencies (minimal - only numpy required for GDPO)
 pip install numpy
 
 # Verify installation
@@ -79,31 +79,31 @@ sys.path.insert(0, '/content/RewardFunctionsADThinker')
 ```bash
 pip install numpy
 # For extensive mode (code execution sandbox):
-pip install e2b  # Optional â€” for RF-15 cloud sandbox execution
+pip install e2b  # Optional - for RF-15 cloud sandbox execution
 ```
 
 ---
 
-## ðŸ“š Theoretical Background
+## 📚 Theoretical Background
 
 ### Why Reinforcement Learning After SFT?
 
-Supervised Fine-Tuning (SFT) teaches a model *what* to generate by showing it examples. But SFT has a fundamental limitation: it optimizes for **token-level likelihood** â€” matching the training distribution word by word. This means:
+Supervised Fine-Tuning (SFT) teaches a model *what* to generate by showing it examples. But SFT has a fundamental limitation: it optimizes for **token-level likelihood** -- matching the training distribution word by word. This means:
 
 - The model learns to *imitate* rather than *reason*
 - It can't learn from structural properties of the output (format, consistency, depth)
 - It treats all tokens equally, regardless of their importance to output quality
 
-**Reinforcement Learning** flips the script. Instead of saying "copy this exact output," RL says "here's a score for your output â€” figure out how to get a higher score." This lets us reward properties that are hard to capture in SFT:
+**Reinforcement Learning** flips the script. Instead of saying "copy this exact output," RL says "here's a score for your output -- figure out how to get a higher score." This lets us reward properties that are hard to capture in SFT:
 
 | Property | SFT Can Learn? | RL Can Optimize? |
 |----------|:-:|:-:|
-| Vocabulary and style | âœ… | âœ… |
-| Exact format compliance | âš ï¸ Somewhat | âœ… Directly |
-| No repetition/loops | âŒ Hard | âœ… Via penalty |
-| Self-containment (no meta) | âŒ Hard | âœ… Via penalty |
-| Reasoning depth | âŒ Can't measure | âœ… Via reward |
-| Code that actually runs | âŒ Impossible | âœ… Via execution |
+| Vocabulary and style | Yes | Yes |
+| Exact format compliance | Somewhat | Yes, Directly |
+| No repetition/loops | Hard | Yes, Via penalty |
+| Self-containment (no meta) | Hard | Yes, Via penalty |
+| Reasoning depth | Can't measure | Yes, Via reward |
+| Code that actually runs | Impossible | Yes, Via execution |
 
 ### The RLVR Paradigm (Reinforcement Learning with Verifiable Rewards)
 
@@ -115,7 +115,7 @@ This library follows the **RLVR** paradigm pioneered by DeepSeek-R1 (2025): inst
 - Fully interpretable (you can see exactly why a score is high/low)
 - Easy to iterate (change a regex, not retrain a model)
 
-**The trade-off:** Rule-based rewards can only capture what you can write rules for. They can't capture "this answer sounds smart" â€” but for our domain (structured engineering outputs), rules are powerful enough.
+**The trade-off:** Rule-based rewards can only capture what you can write rules for. They can't capture "this answer sounds smart" -- but for our domain (structured engineering outputs), rules are powerful enough.
 
 ### From GRPO to GDPO: Why Decoupled Normalization Matters
 
@@ -125,59 +125,59 @@ This library follows the **RLVR** paradigm pioneered by DeepSeek-R1 (2025): inst
 3. Computing advantages (how much better/worse than the group average)
 4. Using policy gradients to increase the probability of high-advantage completions
 
-The problem with 20+ reward functions in vanilla GRPO: all rewards are **summed first, then normalized**. This causes **reward signal collapse** â€” different rewards with different scales get blended into a uniform signal, losing information.
+The problem with 20+ reward functions in vanilla GRPO: all rewards are **summed first, then normalized**. This causes **reward signal collapse** -- different rewards with different scales get blended into a uniform signal, losing information.
 
 **GDPO** (January 2026) fixes this by **normalizing each reward independently, then aggregating**. Think of it like grading papers:
 
 ```
-GRPO:  grade = normalize(math + english + science)       â†’ loses subject-level info
-GDPO:  grade = normalize(math) + normalize(english) + normalize(science)  â†’ preserves each
+GRPO:  grade = normalize(math + english + science)       -> loses subject-level info
+GDPO:  grade = normalize(math) + normalize(english) + normalize(science)  -> preserves each
 ```
 
 This library implements GDPO via `training/gdpo_wrapper.py`.
 
 ---
 
-## ðŸ“ Mathematical Foundations
+## 📐 Mathematical Foundations
 
 ### Policy Gradient Objective
 
 All RL training methods optimize a variant of the policy gradient objective:
 
 ```
-J(Î¸) = E_{x~D, y~Ï€_Î¸(Â·|x)} [ A(x, y) Â· log Ï€_Î¸(y|x) ]
+J(theta) = E_{x~D, y~pi_theta(.|x)} [ A(x, y) * log pi_theta(y|x) ]
 ```
 
 Where:
-- `Î¸` = model parameters
+- `theta` = model parameters
 - `x` = prompt, `y` = completion
-- `Ï€_Î¸(y|x)` = model's probability of generating y given x
-- `A(x, y)` = advantage â€” how much better y is than average
+- `pi_theta(y|x)` = model's probability of generating y given x
+- `A(x, y)` = advantage -- how much better y is than average
 
 The key difference between RL algorithms is **how they compute A(x, y)**:
 
 | Algorithm | Advantage Computation |
 |-----------|----------------------|
 | **GRPO** | `A(y) = (R(y) - mean(R)) / std(R)` over group of N completions |
-| **GDPO** | `A(y) = Î£áµ¢ wáµ¢ Â· (Ráµ¢(y) - mean(Ráµ¢)) / std(Ráµ¢)` â€” per-reward normalization |
-| **DPO** | `A(y_w, y_l) = Î² Â· log(Ï€_Î¸(y_w)/Ï€_ref(y_w)) - Î² Â· log(Ï€_Î¸(y_l)/Ï€_ref(y_l))` |
-| **KTO** | `A(y) = sign(R(y) - threshold) Â· KL(Ï€_Î¸ â€– Ï€_ref)` |
+| **GDPO** | `A(y) = SUM_i w_i * (R_i(y) - mean(R_i)) / std(R_i)` -- per-reward normalization |
+| **DPO** | `A(y_w, y_l) = beta * log(pi_theta(y_w)/pi_ref(y_w)) - beta * log(pi_theta(y_l)/pi_ref(y_l))` |
+| **KTO** | `A(y) = sign(R(y) - threshold) * KL(pi_theta || pi_ref)` |
 
 ### Our Reward Function Design
 
-Each reward function `Ráµ¢: String â†’ [0, 1]` maps a completion to a scalar score. The total reward is:
+Each reward function `R_i: String -> [0, 1]` maps a completion to a scalar score. The total reward is:
 
 ```
-R_total(y) = Î£áµ¢ wáµ¢ Â· Ráµ¢(y)   where Î£áµ¢ wáµ¢ = 1
+R_total(y) = SUM_i w_i * R_i(y)   where SUM_i w_i = 1
 ```
 
 Weight distribution (optimized for content + thinking quality):
 
 ```
-Content Quality:  wâ‚ƒ + wâ‚„ + wâ‚… + wâ‚ˆ + wâ‚‰ + wâ‚â‚€ + wâ‚â‚ˆ + wâ‚‚â‚€ = 0.53
-Thinking Quality: wâ‚† + wâ‚‡ + wâ‚â‚‰ = 0.27
-Structural:       wâ‚ + wâ‚‚ = 0.10
-Task-Specific:    wâ‚â‚...wâ‚â‚‡ = 0.10 (varies by task)
+Content Quality:  w3 + w4 + w5 + w8 + w9 + w10 + w18 + w20 = 0.53
+Thinking Quality: w6 + w7 + w19 = 0.27
+Structural:       w1 + w2 = 0.10
+Task-Specific:    w11...w17 = 0.10 (varies by task)
 ```
 
 ### Sigmoid Scoring for Volume
@@ -185,7 +185,7 @@ Task-Specific:    wâ‚â‚...wâ‚â‚‡ = 0.10 (varies by task)
 Instead of hard thresholds (which create discontinuous gradients), we use smooth sigmoid curves:
 
 ```
-score(x) = 1 / (1 + exp(-(x - center) / (center Â· steepness)))
+score(x) = 1 / (1 + exp(-(x - center) / (center * steepness)))
 ```
 
 This gives partial credit for approaching the target volume, creating a smooth gradient signal that helps the model learn incrementally.
@@ -197,7 +197,7 @@ We compute the 4-gram frequency distribution:
 ```
 freq(g) = count(g) / total_4grams
 max_freq = max_{g} freq(g)
-penalty = -0.15 Â· min(1, max_freq / 0.005)
+penalty = -0.15 * min(1, max_freq / 0.005)
 ```
 
 If any single 4-gram appears in more than 0.5% of all 4-grams, it triggers a proportional penalty. This catches both exact repetition and template-based padding.
@@ -212,7 +212,7 @@ We compute **windowed TTR** with sliding windows of 200 words to catch local poc
 
 ---
 
-## ðŸ“‹ Reward Function Reference
+## 📋 Reward Function Reference
 
 ### Tier 1: Structural (10% weight)
 
@@ -221,7 +221,7 @@ We compute **windowed TTR** with sliding windows of 200 words to catch local poc
 | RF-01 | `format_tags_reward` | `<think>` tag presence, matching, no duplicates | [0, 1] |
 | RF-02 | `followup_substance_reward` | Follow-up turns are substantive (>200 chars) and unique | [0, 1] |
 
-### Tier 2: Content Quality (53% weight) â­
+### Tier 2: Content Quality (53% weight)
 
 | ID | Function | What It Checks | Score Range |
 |----|----------|---------------|-------------|
@@ -229,12 +229,12 @@ We compute **windowed TTR** with sliding windows of 200 words to catch local poc
 | RF-04 | `self_containment_reward` | 60+ banned phrases in 4 categories (meta, citations, self-counting, sycophancy) | [0, 1] |
 | RF-05 | `volume_richness_reward` | Smooth sigmoid volume + TTR + domain term density | [0, 1] |
 | RF-08 | `language_purity_reward` | English consistency via stop word heuristic | [0, 1] |
-| RF-09 | `domain_terminology_reward` | AD/ADAS technical term density (target: â‰¥3%) | [0, 1] |
+| RF-09 | `domain_terminology_reward` | AD/ADAS technical term density (target: >=3%) | [0, 1] |
 | RF-10 | `coherence_flow_reward` | Section transitions use linking language | [0, 1] |
 | RF-18 | `immersive_persona_reward` | User/assistant stay in-character as engineers | [0, 1] |
-| RF-20 | `information_density_reward` | Ratio of substantive sentences (â‰¥60% target) | [0, 1] |
+| RF-20 | `information_density_reward` | Ratio of substantive sentences (>=60% target) | [0, 1] |
 
-### Tier 3: Thinking Quality (27% weight) â­
+### Tier 3: Thinking Quality (27% weight)
 
 | ID | Function | What It Checks | Score Range |
 |----|----------|---------------|-------------|
@@ -250,38 +250,38 @@ We compute **windowed TTR** with sliding windows of 200 words to catch local poc
 | RF-12 | `review_findings_reward` | Expert reviews | 15 findings with severity/root cause/recommendation |
 | RF-13 | `qa_dialectic_reward` | Q&A | Executive summary, trade-off matrix, resolution |
 | RF-14 | `code_syntax_reward` | Coding, visual | Balanced delimiters, no placeholders, functions/imports |
-| RF-15 | `code_execution_reward` | Coding | Sandbox execution: syntaxâ†’runtimeâ†’completionâ†’assertions |
+| RF-15 | `code_execution_reward` | Coding | Sandbox execution: syntax > runtime > completion > assertions |
 | RF-16 | `visual_code_volume_reward` | Visual tasks | Line count, completeness, interconnected elements |
 | RF-17 | `mathematical_rigor_reward` | Concepts, TikZ | Formal math, graph notation, no banned languages |
 
 ---
 
-## ðŸ— Architecture
+## 🏗 Architecture
 
 ```
-                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                    â”‚         Your Training Script            â”‚
-                    â”‚  (grpo_train.py / dpo_train.py)         â”‚
-                    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                                    â”‚
-                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-                    â”‚        RewardDispatcher                  â”‚
-                    â”‚  - mode: lightweight / extensive          â”‚
-                    â”‚  - auto-selects by task_type             â”‚
-                    â”‚  - applies weight config                 â”‚
-                    â””â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”˜
-                        â”‚                               â”‚
-          â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”     â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
-          â”‚   COMMON REWARDS       â”‚     â”‚   TASK-SPECIFIC         â”‚
-          â”‚   (13 functions)       â”‚     â”‚   (7 functions)         â”‚
-          â”‚   Applied to ALL       â”‚     â”‚   Auto-selected         â”‚
-          â”‚   task types           â”‚     â”‚   by task_type          â”‚
-          â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜     â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
-                        â”‚                               â”‚
-          â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”
-          â”‚                    UTILS                           â”‚
-          â”‚  text_analysis.py â”‚ parsers.py â”‚ vocabulary/*.py   â”‚
-          â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                    +-------------------------------------------+
+                    |         Your Training Script              |
+                    |  (grpo_train.py / dpo_train.py)           |
+                    +-------------------+-----------------------+
+                                        |
+                    +-------------------v-----------------------+
+                    |        RewardDispatcher                    |
+                    |  - mode: lightweight / extensive           |
+                    |  - auto-selects by task_type               |
+                    |  - applies weight config                   |
+                    +---+-------------------------------+-------+
+                        |                               |
+          +-------------v--------------+   +------------v--------------+
+          |   COMMON REWARDS           |   |   TASK-SPECIFIC           |
+          |   (13 functions)           |   |   (7 functions)           |
+          |   Applied to ALL           |   |   Auto-selected           |
+          |   task types               |   |   by task_type            |
+          +-------------+--------------+   +------------+--------------+
+                        |                               |
+          +-------------v-------------------------------v-------+
+          |                    UTILS                             |
+          |  text_analysis.py | parsers.py | vocabulary/*.py     |
+          +-----------------------------------------------------+
 ```
 
 ### Compute Modes
@@ -293,7 +293,7 @@ We compute **windowed TTR** with sliding windows of 200 words to catch local poc
 
 ---
 
-## ðŸŽ› Usage Modes
+## 🎛 Usage Modes
 
 ### Mode 1: GRPO/GDPO Training (Online RL)
 
@@ -355,12 +355,12 @@ trainer.train()
 
 ### Mode 3: KTO Training (Binary Feedback)
 
-Simpler than DPO â€” only needs good/bad labels, not paired comparisons.
+Simpler than DPO -- only needs good/bad labels, not paired comparisons.
 
 ```python
 from training.dpo_pair_generator import generate_kto_labels
 labels = generate_kto_labels(model_outputs, dispatcher)
-# â†’ [{"prompt": ..., "completion": ..., "label": True/False}, ...]
+# -> [{"prompt": ..., "completion": ..., "label": True/False}, ...]
 ```
 
 ### Mode 4: Manual Scoring (Analysis & Debugging)
@@ -379,13 +379,14 @@ for name, scores in sorted(results.items()):
 
 ---
 
-## ðŸŽ“ Training Tutorials
+## 🎓 Training Tutorials
 
 ### Tutorial 1: Your First GRPO Training Run
 
 **Goal:** Fine-tune a Qwen3 model on AD/ADAS concept generation using our reward functions on a free Google Colab T4 GPU.
 
 **Step 1: Environment Setup**
+
 ```python
 # Install Unsloth (optimized for free Colab)
 !pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
@@ -399,6 +400,7 @@ sys.path.insert(0, '/content/RewardFunctionsADThinker')
 ```
 
 **Step 2: Load Model**
+
 ```python
 from unsloth import FastLanguageModel
 
@@ -418,6 +420,7 @@ model = FastLanguageModel.get_peft_model(
 ```
 
 **Step 3: Configure Reward Functions**
+
 ```python
 from reward_functions import RewardDispatcher
 from training.gdpo_wrapper import create_gdpo_reward_func
@@ -430,6 +433,7 @@ combined_reward = create_gdpo_reward_func(
 ```
 
 **Step 4: Prepare Dataset**
+
 ```python
 from datasets import Dataset
 
@@ -447,6 +451,7 @@ dataset = Dataset.from_list(data)
 ```
 
 **Step 5: Train**
+
 ```python
 from trl import GRPOTrainer, GRPOConfig
 
@@ -477,7 +482,7 @@ model.save_pretrained("./grpo_model")
 
 ### Tutorial 2: Iterative DPO with Reward Scoring
 
-This approach generates completions, scores them, creates preference pairs, and trains with DPO â€” repeated for multiple iterations.
+This approach generates completions, scores them, creates preference pairs, and trains with DPO -- repeated for multiple iterations.
 
 ```python
 from reward_functions import RewardDispatcher
@@ -505,7 +510,7 @@ trainer.train()
 
 ---
 
-## ðŸ““ Google Colab Cookbooks
+## 📓 Google Colab Cookbooks
 
 ### Cookbook 1: Score Any Model Output (No Training Required)
 
@@ -514,15 +519,10 @@ trainer.train()
 See: `cookbooks/01_score_model_outputs.py`
 
 ```python
-# Run in Colab:
-# !git clone https://github.com/sfreedoms2035/4QDR_RewardFunctions_Lib.git /content/RewardFunctionsADThinker
-# sys.path.insert(0, '/content/RewardFunctionsADThinker')
-
 from reward_functions import RewardDispatcher
 
 dispatcher = RewardDispatcher(mode="lightweight")
 
-# Paste your model output here
 my_output = """<think>
 Step 1: ...
 </think>
@@ -531,7 +531,7 @@ My answer content here...
 
 results = dispatcher.score_detailed([my_output], task_type="q_and_a")
 for name, score in sorted(results.items()):
-    bar = "â–ˆ" * int(score[0] * 20)
+    bar = "#" * int(score[0] * 20)
     print(f"{name:30s}  {bar:20s}  {score[0]:.3f}")
 ```
 
@@ -555,33 +555,37 @@ See: `cookbooks/04_generate_dpo_pairs.py`
 
 ---
 
-## âœ… Verification & Validation
+## ✅ Verification & Validation
 
 The V&V framework ensures reward functions work correctly before any GPU time is spent on training.
 
 ### Phase 1: Unit Tests
+
 ```bash
 python -m pytest tests/ -v
 ```
 
 ### Phase 2: Distribution Analysis
+
 ```bash
 python analysis/score_distribution.py --data-dir /path/to/pipeline/outputs
 ```
 
 ### Phase 3: Sensitivity Tests
+
 ```bash
 python tests/test_sensitivity.py
 ```
 
 ### Phase 4: Integration Dry-Run
+
 ```bash
 python tests/test_integration_dryrun.py --num-prompts 10 --num-generations 4
 ```
 
 ---
 
-## ðŸ“– API Reference
+## 📖 API Reference
 
 ### `reward_functions.create_reward_suite(mode, task_type, weights)`
 
@@ -593,17 +597,17 @@ Factory function returning a list of reward functions for GRPOTrainer.
 | `task_type` | str | None | If set, only returns relevant task-specific rewards |
 | `weights` | dict | None | Custom weight overrides |
 
-**Returns:** `List[Callable]` â€” reward functions with signature `(completions, **kwargs) -> list[float]`
+**Returns:** `List[Callable]` -- reward functions with signature `(completions, **kwargs) -> list[float]`
 
 ### `reward_functions.RewardDispatcher(mode, weights)`
 
 Main dispatcher class for reward function management.
 
 **Methods:**
-- `get_reward_funcs(task_type)` â†’ list of reward functions
-- `get_all_reward_funcs()` â†’ all 20 functions
-- `score(completions, task_type)` â†’ weighted total scores
-- `score_detailed(completions, task_type)` â†’ per-function breakdown
+- `get_reward_funcs(task_type)` -- list of reward functions
+- `get_all_reward_funcs()` -- all 20 functions
+- `score(completions, task_type)` -- weighted total scores
+- `score_detailed(completions, task_type)` -- per-function breakdown
 
 ### `training.gdpo_wrapper.create_gdpo_reward_func(reward_funcs, weights)`
 
@@ -621,5 +625,4 @@ Converts pipeline JSON into GRPO training format.
 
 ## License
 
-MIT â€” Use freely for research and commercial AD/ADAS model training.
-
+MIT -- Use freely for research and commercial AD/ADAS model training.
