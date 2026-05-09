@@ -1,0 +1,33 @@
+# Reward Function Weight Configuration
+# =====================================
+# Weights control relative importance of each reward function.
+# Content Quality + Thinking Quality = 70% of total signal.
+
+weights:
+  # TIER 1: Structural (10% total)
+  format_tags:           0.05
+  followup_substance:    0.05
+  
+  # TIER 2: Content Quality (35% total) ⭐
+  anti_repetition:       0.12
+  self_containment:      0.10
+  volume_richness:       0.08
+  language_purity:       0.03
+  domain_terminology:    0.05
+  coherence_flow:        0.05
+  immersive_persona:     0.05
+  information_density:   0.05
+  
+  # TIER 3: Thinking Quality (35% total) ⭐
+  cot_structure:         0.10
+  reasoning_depth:       0.12
+  answer_structure:      0.05
+  
+  # TIER 4: Task-Specific (20% total, added on top)
+  concept_completeness:  0.10
+  mathematical_rigor:    0.08
+  review_findings:       0.10
+  qa_dialectic:          0.10
+  code_syntax:           0.08
+  code_execution:        0.12
+  visual_code_volume:    0.08
